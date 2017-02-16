@@ -13,7 +13,7 @@ namespace TestLogin.Models
         public int UserID { get; set; }
 
         [Required]
-        [StringLength(20,MinimumLength = 4)]
+        [StringLength(20,MinimumLength = 4, ErrorMessage = "Minimo de 4 caracteres")]
         public string UserName { get; set; }
 
         [Required]

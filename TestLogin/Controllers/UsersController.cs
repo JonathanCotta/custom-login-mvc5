@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using TestLogin.Filters;
 using TestLogin.Models;
 using TestLogin.Models.Repository;
 
 
 namespace TestLogin.Controllers
 {
+    [Authorization]
     public class UsersController : Controller
     {
         UserRepository repo = new UserRepository(new Models.DataBase());        
@@ -16,26 +18,26 @@ namespace TestLogin.Controllers
             return View(await repo.GetAll());
         }
 
-
         //GET: /Users/Register/
+        [AllowAnonymous]
         public ActionResult Register()
         {
             return View(new User());
         }
 
         //POST: /Users/Register
-        [HttpPost]
+        [HttpPost] 
+        [AllowAnonymous]        
         [ValidateAntiForgeryToken]
         public ActionResult Register(string UserName , string Password , bool Role)
-        {
-                                
+        {                                 
             repo.Create(UserName , Password , Role);            
-            return RedirectToAction("Index","Home");
-            
+            return RedirectToAction("Index","Home");             
         }
               
         //POST: /Users/Login
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(string UserName, string Password)
         {
@@ -43,8 +45,7 @@ namespace TestLogin.Controllers
 
             if (user != null)
             {
-                Session["isLoged"] = true;
-                Session["UserName"] = user.UserName;
+                Session["isLoged"] = true;              
                 Session["Role"] = user.Role;
 
                 return RedirectToAction("Index", "Users");

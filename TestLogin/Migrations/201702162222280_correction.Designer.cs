@@ -7,13 +7,13 @@ namespace TestLogin.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class RoleChange : IMigrationMetadata
+    public sealed partial class correction : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(RoleChange));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(correction));
         
         string IMigrationMetadata.Id
         {
-            get { return "201603241618070_RoleChange"; }
+            get { return "201702162222280_correction"; }
         }
         
         string IMigrationMetadata.Source

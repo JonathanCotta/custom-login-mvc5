@@ -8,28 +8,26 @@ namespace TestLogin.Models.Repository
 {
     public class UserRepository : IRepository<User>
     {
-        #region Variables and Constructor
+
         DataBase db;
         bool disposed = false;
 
         Safe sf = new Safe(Safe.Algorithm.sha512);
-         
+
         public UserRepository(DataBase d)
         {
             db = d;
         }
-        #endregion
 
-        #region CRUD
         public void Create(User item)
-        { 
-            db.Users.Add(item);
-            db.SaveChanges();
-        }       
+        {
+            db.Users.Add(item);            
+            db.SaveChanges();               
+        }
 
         public void Create(string name, string passWord, bool role)
         {
-            var pw = sf.HashGen(passWord);
+            var pw = sf.HashGen(passWord);           
             Create(new User { UserName = name, Password = pw, Role = role });
         }
 
@@ -61,9 +59,7 @@ namespace TestLogin.Models.Repository
             user.Password = sf.HashGen(passWord);
             Edit(user);
         }
-        #endregion
 
-        #region Session Operations
         public User LogIn(string name, string password)
         {
             string passwordHash = sf.HashGen(password);
@@ -71,7 +67,7 @@ namespace TestLogin.Models.Repository
             try
             {
                 User user = db.Users.Where(u => u.UserName == name & u.Password == passwordHash).Single();
-                return user;  
+                return user;
             }
             catch (Exception)
             {
@@ -80,22 +76,25 @@ namespace TestLogin.Models.Repository
 
         }
 
-        #endregion
-        
-        #region Dispose
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        } 
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposed)
-                if (disposing)
-                    db.Dispose();
-            disposed = true;
         }
-        #endregion 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                db.Dispose();
+                sf.Dispose();
+            }
+
+            disposed = true; 
+        }
+
     }
 }
