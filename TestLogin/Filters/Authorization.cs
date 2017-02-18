@@ -26,7 +26,7 @@ namespace TestLogin.Filters
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
-            filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Home" }, { "action", "Index" } });
+            filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Users" }, { "action", "Login" }, {"ErrorMsg", true } });
         }
 
         private static bool skipAuthorization(AuthorizationContext filterContext)

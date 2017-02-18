@@ -19,14 +19,20 @@
                 @Html.ActionLink("Learning Session control", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <ul class="nav navbar-nav">                    
                     <li>@Html.ActionLink("Users", "Index", "Users")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
-                <ul class="nav navbar-right">
-                    <li>@Html.ActionLink("Logout", "Logout", "Users")</li>
+                <ul class="nav navbar-nav navbar-right" >
+                    @if ((bool)Session["IsLoged"])
+                    {
+                        <li>@Html.ActionLink("Logout", "Logout", "Users")</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Login", "Login", "Users")</li> 
+                    }    
                 </ul>
             </div>
         </div>
@@ -35,7 +41,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; Since @DateTime.Now.Year </p>
+            <p>&copy; Since 2016 </p>
         </footer>
     </div>
 

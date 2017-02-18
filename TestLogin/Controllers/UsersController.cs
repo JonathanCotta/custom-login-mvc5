@@ -34,6 +34,18 @@ namespace TestLogin.Controllers
             repo.Create(UserName , Password , Role);            
             return RedirectToAction("Index","Home");             
         }
+
+        //GET: /Users/Login
+        [HttpGet]         
+        [AllowAnonymous]
+        public ActionResult Login(bool? ErrorMsg)
+        {
+            if (ErrorMsg != null)
+                if((bool)ErrorMsg)
+                    ViewBag.msg = "To Access this page you need to be loged, please login.";
+
+            return View();
+        }
               
         //POST: /Users/Login
         [HttpPost]

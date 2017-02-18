@@ -29,7 +29,7 @@ namespace TestLogin.Filters
                     filterContext.Result = new HttpUnauthorizedResult();
             }
             else
-                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Home" }, { "action", "Index" } }); 
+                filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Users" }, { "action", "Login" }, { "ErrorMsg", true } });
         }  
         
     }
