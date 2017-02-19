@@ -10,7 +10,7 @@ namespace TestLogin.Controllers
     [Authorization]
     public class UsersController : Controller
     {
-        UserRepository repo = new UserRepository(new Models.DataBase());        
+        UserRepository repo = new UserRepository();        
 
         // GET: Users
         public async Task<ActionResult> Index()
@@ -80,8 +80,6 @@ namespace TestLogin.Controllers
             if (disposing)
                 repo.Dispose();
             base.Dispose(disposing);
-        }
-
-       
+        } 
     }
 }

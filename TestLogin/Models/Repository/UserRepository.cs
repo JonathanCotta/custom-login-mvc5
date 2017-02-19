@@ -6,34 +6,23 @@ using System.Threading.Tasks;
 
 namespace TestLogin.Models.Repository
 {
-    public class UserRepository : IRepository<User>
+    public class UserRepository : IDisposable
     {
-
-        DataBase db;
         bool disposed = false;
-
-        Safe sf = new Safe(Safe.Algorithm.sha512);
-
-        public UserRepository(DataBase d)
-        {
-            db = d;
-        }
-
-        public void Create(User item)
-        {
-            db.Users.Add(item);            
-            db.SaveChanges();               
-        }
-
+        DataBase db = new DataBase(); 
+        Safe sf = new Safe(Safe.Algorithm.sha512);      
+        
         public void Create(string name, string passWord, bool role)
         {
             var pw = sf.HashGen(passWord);           
-            Create(new User { UserName = name, Password = pw, Role = role });
+            var user = new User { UserName = name, Password = pw, Role = role };
+            db.Users.Add(user);
+            db.SaveChanges();
         }
 
-        public void Edit(User item)
+        public void Edit(User obj)
         {
-            db.Entry(item).State = EntityState.Modified;
+            db.Entry(obj).State = EntityState.Modified;
             db.SaveChanges();
         }
 
@@ -42,14 +31,14 @@ namespace TestLogin.Models.Repository
             return Task.Run(async () => { return await db.Users.ToListAsync(); });
         }
 
-        public Task<User> GetOne(int? id)
+        public Task<User> GetOne(int id)
         {
             return Task.Run(async () => { return await db.Users.FindAsync(id); });
         }
 
-        public void Remove(User item)
+        public void Remove(User obj)
         {
-            db.Users.Remove(item);
+            db.Users.Remove(obj);
             db.SaveChanges();
         }
 

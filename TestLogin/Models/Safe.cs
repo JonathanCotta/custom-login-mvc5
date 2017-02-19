@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 namespace TestLogin.Models
 {
     public class Safe  : IDisposable
     {
-        #region Variables and Constructor
+       
         private bool disposed = false;
         private HashAlgorithm sha;
         public enum Algorithm { sha1, sha256, sha384, sha512 }
@@ -33,17 +30,15 @@ namespace TestLogin.Models
                 default:
                     break;
             }
-        } 
-        #endregion
+        }       
 
         public string HashGen(string p)
         {
             byte[] hashBytes = Encoding.UTF8.GetBytes(p);
             hashBytes = sha.ComputeHash(hashBytes);
             return BitConverter.ToString(hashBytes).Replace("-", "");
-        }                 
-
-        #region Dispose
+        }                
+          
         public void Dispose()
         {
             Dispose(true);
@@ -56,7 +51,6 @@ namespace TestLogin.Models
                 if (disposing)
                     sha.Dispose();
             disposed = true;
-        } 
-        #endregion
+        }         
     }
 }
