@@ -10,7 +10,7 @@ namespace TestLogin.Controllers
     [Authorization]
     public class UsersController : Controller
     {
-        UserRepository repo = new UserRepository();        
+        UserRepository repo = new UserRepository();
 
         // GET: Users
         public async Task<ActionResult> Index()
@@ -22,57 +22,66 @@ namespace TestLogin.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View(new User());
+            return View(new UserRegisterViewModel());
         }
 
         //POST: /Users/Register
-        [HttpPost] 
-        [AllowAnonymous]        
+        [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(string UserName , string Password , bool Role)
-        {                                 
-            repo.Create(UserName , Password , Role);            
-            return RedirectToAction("Index","Home");             
+        public ActionResult Register(UserRegisterViewModel u)
+        {
+            if (ModelState.IsValid)
+            {
+                repo.Create(u.UserName, u.Password, u.Role);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         //GET: /Users/Login
-        [HttpGet]         
+        [HttpGet]
         [AllowAnonymous]
         public ActionResult Login(bool? ErrorMsg)
         {
             if (ErrorMsg != null)
-                if((bool)ErrorMsg)
+                if ((bool)ErrorMsg)
                     ViewBag.msg = "To Access this page you need to be loged, please login.";
 
-            return View();
+            return View(new UserLoginViewModel());
         }
-              
+
         //POST: /Users/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(string UserName, string Password)
+        public ActionResult Login(UserLoginViewModel u)
         {
-            User user = repo.LogIn(UserName, Password);
 
-            if (user != null)
+            if (ModelState.IsValid)
             {
-                Session["isLoged"] = true;              
-                Session["Role"] = user.Role;
+                User user = repo.LogIn(u.UserName, u.Password);
 
-                return RedirectToAction("Index", "Users");
+                if (user != null)
+                {
+                    Session["isLoged"] = true;
+                    Session["Role"] = user.Role;
+
+                    return RedirectToAction("Index", "Users");
+                }
             }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         //GET: /Users/Logout
         public ActionResult Logout()
-        {          
+        {
             Session.Abandon();
-            return RedirectToAction("Index", "Home");           
+            return RedirectToAction("Index", "Home");
         }
 
         protected override void Dispose(bool disposing)
@@ -80,6 +89,6 @@ namespace TestLogin.Controllers
             if (disposing)
                 repo.Dispose();
             base.Dispose(disposing);
-        } 
+        }
     }
 }
