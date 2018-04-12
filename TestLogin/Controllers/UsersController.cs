@@ -47,9 +47,8 @@ namespace TestLogin.Controllers
         [AllowAnonymous]
         public ActionResult Login(bool? ErrorMsg)
         {
-            if (ErrorMsg != null)
-                if ((bool)ErrorMsg)
-                    ViewBag.msg = "To Access this page you need to be loged, please login.";
+            if (ErrorMsg != null && (bool)ErrorMsg)
+                ViewBag.msg = "To Access this page you need to be loged, please login.";
 
             return View(new UserLoginViewModel());
         }
@@ -62,19 +61,25 @@ namespace TestLogin.Controllers
         {
 
             if (ModelState.IsValid)
-            {
-                User user = repo.LogIn(u.UserName, u.Password);
+             {
+                 User user = repo.LogIn(u.UserName, u.Password);
 
-                if (user != null)
+                 if (user != null)
+                 {
+                     Session["isLoged"] = true;
+                     Session["Role"] = user.Role;
+
+                     return RedirectToAction("Index", "Users");
+                 }
+                else
                 {
-                    Session["isLoged"] = true;
-                    Session["Role"] = user.Role;
-
-                    return RedirectToAction("Index", "Users");
+                    ViewBag.msg = "Usuário não encontrado ou inválido";
+                    return View();
                 }
-            }
-
-            return RedirectToAction("Index", "Home");
+                
+             }
+            
+            return View();
         }
 
         //GET: /Users/Logout
